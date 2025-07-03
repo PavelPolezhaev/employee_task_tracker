@@ -1,19 +1,31 @@
 from django.db import models
 
-
-COMPLETED_STATUS_CHOICES = (
-    ("completed", "Выполнена"),
-    ("in_progress", "В процессе")
-)
+COMPLETED_STATUS_CHOICES = (("completed", "Выполнена"), ("in_progress", "В процессе"))
 
 
 class Employee(models.Model):
     """Модель сотрудника"""
 
     first_name = models.CharField(max_length=50, verbose_name="Имя сотрудника", help_text="Введите имя сотрудника")
-    last_name = models.CharField(max_length=50, verbose_name="Фамилия сотрудника", help_text="Введите фамилию сотрудника")
-    patronymic = models.CharField(max_length=50, blank=True, null=True, verbose_name="Отчество сотрудника", help_text="Введите отчество сотрудника")
-    post = models.CharField(max_length=100, blank=True, null=True, verbose_name="Должность сотрудника", help_text="Введите должность сотрудника")
+    last_name = models.CharField(
+        max_length=50,
+        verbose_name="Фамилия сотрудника",
+        help_text="Введите фамилию сотрудника",
+    )
+    patronymic = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="Отчество сотрудника",
+        help_text="Введите отчество сотрудника",
+    )
+    post = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Должность сотрудника",
+        help_text="Введите должность сотрудника",
+    )
 
     class Meta:
         verbose_name = "Работник"
@@ -33,7 +45,7 @@ class Task(models.Model):
         blank=True,
         null=True,
         verbose_name="Родительская задача",
-        help_text="Выберите задачу которую необходимо сделать перед выполнением этой"
+        help_text="Выберите задачу которую необходимо сделать перед выполнением этой",
     )
     employee = models.ForeignKey(
         Employee,
@@ -46,7 +58,12 @@ class Task(models.Model):
         verbose_name="Срок исполнения задачи в днях",
         help_text="Введите сроки исполнения задачи в днях",
     )
-    is_completed = models.CharField(choices=COMPLETED_STATUS_CHOICES, default="in_progress", verbose_name="Статус выполнения задачи", help_text="Выберите статус выполнения задачи")
+    is_completed = models.CharField(
+        choices=COMPLETED_STATUS_CHOICES,
+        default="in_progress",
+        verbose_name="Статус выполнения задачи",
+        help_text="Выберите статус выполнения задачи",
+    )
 
     class Meta:
         verbose_name = "Задача"

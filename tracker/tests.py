@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from tracker.models import Employee, Task
-from tracker.serializers import EmployeeSerializer, TaskSerializer, BusyEmployeeSerializer, ImportantTaskSerializer
+from tracker.serializers import EmployeeSerializer, TaskSerializer
 
 
 class EmployeeModelTest(TestCase):
@@ -13,7 +13,7 @@ class EmployeeModelTest(TestCase):
             first_name="Иван",
             last_name="Иванов",
             patronymic="Иванович",
-            post="Разработчик"
+            post="Разработчик",
         )
 
     def test_employee_creation(self):
@@ -27,16 +27,12 @@ class EmployeeModelTest(TestCase):
 
 class TaskModelTest(TestCase):
     def setUp(self):
-        self.employee = Employee.objects.create(
-            first_name="Петр",
-            last_name="Петров",
-            post="Тестировщик"
-        )
+        self.employee = Employee.objects.create(first_name="Петр", last_name="Петров", post="Тестировщик")
         self.task = Task.objects.create(
             name="Написать тесты",
             employee=self.employee,
             term=5,
-            is_completed="in_progress"
+            is_completed="in_progress",
         )
 
     def test_task_creation(self):
@@ -54,7 +50,7 @@ class EmployeeSerializerTest(TestCase):
             "first_name": "Сергей",
             "last_name": "Сергеев",
             "patronymic": "Сергеевич",
-            "post": "Менеджер"
+            "post": "Менеджер",
         }
 
     def test_valid_serializer(self):
@@ -80,16 +76,12 @@ class EmployeeSerializerTest(TestCase):
 
 class TaskSerializerTest(TestCase):
     def setUp(self):
-        self.employee = Employee.objects.create(
-            first_name="Алексей",
-            last_name="Алексеев",
-            post="Аналитик"
-        )
+        self.employee = Employee.objects.create(first_name="Алексей", last_name="Алексеев", post="Аналитик")
         self.task_data = {
             "name": "Проанализировать требования",
             "employee": self.employee.id,
             "term": 3,
-            "is_completed": "in_progress"
+            "is_completed": "in_progress",
         }
 
     def test_valid_serializer(self):
@@ -103,30 +95,22 @@ class TaskSerializerTest(TestCase):
 class EmployeeViewsTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.employee = Employee.objects.create(
-            first_name="Тест",
-            last_name="Тестов",
-            post="Тестер"
-        )
+        self.employee = Employee.objects.create(first_name="Тест", last_name="Тестов", post="Тестер")
         self.valid_payload = {
             "first_name": "Новый",
             "last_name": "Сотрудник",
-            "post": "Разработчик"
+            "post": "Разработчик",
         }
 
     def test_create_employee(self):
         """Тестирование создания сотрудника"""
-        response = self.client.post(
-            reverse('tracker:employee_create'),
-            data=self.valid_payload,
-            format='json'
-        )
+        response = self.client.post(reverse("tracker:employee_create"), data=self.valid_payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Employee.objects.count(), 2)
 
     def test_get_employee_list(self):
         """Тестирование получения списка сотрудников"""
-        response = self.client.get(reverse('tracker:employee_list'))
+        response = self.client.get(reverse("tracker:employee_list"))
         employees = Employee.objects.all()
         serializer = EmployeeSerializer(employees, many=True)
         self.assertEqual(response.data, serializer.data)
@@ -136,37 +120,29 @@ class EmployeeViewsTest(TestCase):
 class TaskViewsTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.employee = Employee.objects.create(
-            first_name="Работник",
-            last_name="Задачник",
-            post="Исполнитель"
-        )
+        self.employee = Employee.objects.create(first_name="Работник", last_name="Задачник", post="Исполнитель")
         self.task = Task.objects.create(
             name="Тестовая задача",
             employee=self.employee,
             term=1,
-            is_completed="in_progress"
+            is_completed="in_progress",
         )
         self.valid_payload = {
             "name": "Новая задача",
             "term": 2,
             "is_completed": "in_progress",
-            "employee": self.employee.id
+            "employee": self.employee.id,
         }
 
     def test_create_task(self):
         """Тестирование создания задачи"""
-        response = self.client.post(
-            reverse('tracker:tasks_create'),
-            data=self.valid_payload,
-            format='json'
-        )
+        response = self.client.post(reverse("tracker:tasks_create"), data=self.valid_payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Task.objects.count(), 2)
 
     def test_get_task_list(self):
         """Тестирование получения списка задач"""
-        response = self.client.get(reverse('tracker:tasks_list'))
+        response = self.client.get(reverse("tracker:tasks_list"))
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
         self.assertEqual(response.data, serializer.data)

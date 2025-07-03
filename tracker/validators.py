@@ -1,5 +1,6 @@
-from rest_framework.exceptions import ValidationError
 import re
+
+from rest_framework.exceptions import ValidationError
 
 
 class NameValidator:
@@ -14,7 +15,5 @@ class NameValidator:
             if field_value is None or field_value == "":
                 continue
 
-            if not re.match(r'^[А-ЯЁA-Z][а-яёa-z]*$', field_value):
-                raise ValidationError(
-                    f"{field_name} должно начинаться с заглавной буквы и содержать только буквы."
-                )
+            if not re.match(r"^[А-ЯЁA-Z][а-яёa-z]*$", field_value):
+                raise ValidationError(f"{field_name} должно начинаться с заглавной буквы и содержать только буквы.")

@@ -1,9 +1,8 @@
-from django.shortcuts import render
-from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
-from django.db.models import Count, Q
+from django.db.models import Count
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 
 from tracker.models import Employee, Task
-from tracker.serializers import EmployeeSerializer, BusyEmployeeSerializer, TaskSerializer, ImportantTaskSerializer
+from tracker.serializers import BusyEmployeeSerializer, EmployeeSerializer, ImportantTaskSerializer, TaskSerializer
 
 
 class EmployeeCreateAPIView(CreateAPIView):
@@ -15,7 +14,8 @@ class BusyEmployeeListAPIView(ListAPIView):
     serializer_class = BusyEmployeeSerializer
 
     def get_queryset(self):
-        return Employee.objects.annotate(tasks_count=Count('task')).order_by('-tasks_count')
+        return Employee.objects.annotate(tasks_count=Count("task")).order_by("-tasks_count")
+
 
 class EmployeeListAPIView(ListAPIView):
     queryset = Employee.objects.all()

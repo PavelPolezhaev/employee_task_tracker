@@ -1,10 +1,10 @@
 from django.urls import path
-from tracker.views import (EmployeeCreateAPIView, EmployeeUpdateAPIView, EmployeeDestroyAPIView,
-                           EmployeeRetrieveAPIView, EmployeeListAPIView, BusyEmployeeListAPIView,
-                           TaskCreateAPIView, TaskUpdateAPIView, TaskListAPIView,
-                           TaskDestroyAPIView, TaskRetrieveAPIView, ImportantTasksListAPIView)
 
 from tracker.apps import TasksConfig
+from tracker.views import (BusyEmployeeListAPIView, EmployeeCreateAPIView, EmployeeDestroyAPIView, EmployeeListAPIView,
+                           EmployeeRetrieveAPIView, EmployeeUpdateAPIView, ImportantTasksListAPIView,
+                           TaskCreateAPIView, TaskDestroyAPIView, TaskListAPIView, TaskRetrieveAPIView,
+                           TaskUpdateAPIView)
 
 app_name = TasksConfig.name
 
@@ -12,9 +12,9 @@ urlpatterns = [
     path("employee/create/", EmployeeCreateAPIView.as_view(), name="employee_create"),
     path("employee/", EmployeeListAPIView.as_view(), name="employee_list"),
     path("employee/busy/", BusyEmployeeListAPIView.as_view(), name="busy_employee_list"),
-    path("employee/<int:pk>/update/", EmployeeUpdateAPIView.as_view(), name="employee_update"),
-    path("employee/<int:pk>/destroy/", EmployeeDestroyAPIView.as_view(), name="employee_destroy"),
-    path("employee/<int:pk>/retrieve/", EmployeeRetrieveAPIView.as_view(), name="employee_retrieve"),
+    path("employee/<int:pk>/update/", EmployeeUpdateAPIView.as_view(), name="employee_update",),
+    path("employee/<int:pk>/destroy/", EmployeeDestroyAPIView.as_view(), name="employee_destroy",),
+    path("employee/<int:pk>/retrieve/", EmployeeRetrieveAPIView.as_view(), name="employee_retrieve",),
 
     path("tasks/create/", TaskCreateAPIView.as_view(), name="tasks_create"),
     path("tasks/", TaskListAPIView.as_view(), name="tasks_list"),
