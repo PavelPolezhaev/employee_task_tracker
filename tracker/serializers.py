@@ -1,7 +1,7 @@
-from django.db.models import Count, Q
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from tracker.models import Employee, Task
+from tracker.services import get_current_employee, get_free_employee
 from tracker.validators import NameValidator
 
 
@@ -30,38 +30,20 @@ class TaskSerializer(ModelSerializer):
 
 
 class ImportantTaskSerializer(ModelSerializer):
-    available_employees = SerializerMethodField()
+    available_employee = SerializerMethodField()
 
     class Meta:
         model = Task
-        fields = ("id", "name", "term", "available_employees")
+        fields = ("id", "name", "term", "available_employee")
 
-    def get_available_employees(self, task):
-        dependent_tasks = Task.objects.filter(parent_task=task.id, is_completed="in_progress").select_related(
-            "employee"
-        )
+    def get_available_employee(self, task):
 
-        parent_employee_ids = {t.employee.id for t in dependent_tasks if t.employee}
+        free_employee = get_free_employee()
+        current_employee = get_current_employee(task)
 
-        employees_data = Employee.objects.annotate(
-            task_count=Count("task", filter=Q(task__is_completed="in_progress"))
-        ).values("id", "first_name", "last_name", "task_count")
+        if current_employee is None:
+            return f"{free_employee.last_name} {free_employee.first_name} {free_employee.patronymic}"
 
-        if not employees_data:
-            return []
-
-        min_tasks = min(emp["task_count"] for emp in employees_data)
-
-        employees_dict = {emp["id"]: emp for emp in employees_data}
-
-        least_loaded = [emp for emp in employees_data if emp["task_count"] == min_tasks]
-
-        parent_candidates = [
-            employees_dict[emp_id]
-            for emp_id in parent_employee_ids
-            if emp_id in employees_dict and employees_dict[emp_id]["task_count"] <= min_tasks + 2
-        ]
-
-        all_candidates = {emp["id"]: emp for emp in least_loaded + parent_candidates}
-
-        return [f"{emp['last_name']} {emp['first_name']}" for emp in all_candidates.values()]
+        if current_employee is not None and current_employee.task_count - free_employee.task_count < 2:
+            return f"{current_employee.last_name} {free_employee.first_name} {free_employee.patronymic}"
+        return f"{free_employee.last_name} {free_employee.first_name} {free_employee.patronymic}"

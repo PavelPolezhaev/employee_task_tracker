@@ -1,6 +1,9 @@
 from django.db import models
 
-COMPLETED_STATUS_CHOICES = (("completed", "Выполнена"), ("in_progress", "В процессе"))
+COMPLETED_STATUS_CHOICES = (
+    ("completed", "Выполнена"),
+    ("in_progress", "В процессе"),
+)
 
 
 class Employee(models.Model):
@@ -58,7 +61,7 @@ class Task(models.Model):
         verbose_name="Срок исполнения задачи в днях",
         help_text="Введите сроки исполнения задачи в днях",
     )
-    is_completed = models.CharField(
+    status = models.CharField(
         choices=COMPLETED_STATUS_CHOICES,
         default="in_progress",
         verbose_name="Статус выполнения задачи",

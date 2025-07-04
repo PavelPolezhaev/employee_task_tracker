@@ -13,6 +13,6 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("name", "employee", "term", "is_completed")
+    list_display = ("name", "employee", "term", "status")
     list_filter = ("name",)
     search_fields = ("name",)

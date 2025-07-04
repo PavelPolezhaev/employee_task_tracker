@@ -68,18 +68,4 @@ class ImportantTasksListAPIView(ListAPIView):
     serializer_class = ImportantTaskSerializer
 
     def get_queryset(self):
-        important_task_ids = (
-            Task.objects.filter(
-                is_completed="in_progress",
-                employee__isnull=True,
-            )
-            .exclude(task__isnull=True)
-            .filter(
-                task__is_completed="in_progress",
-                task__employee__isnull=False,
-            )
-            .values_list("id", flat=True)
-            .distinct()
-        )
-
-        return Task.objects.filter(id__in=important_task_ids)
+        return Task.objects.filter(parent_task__isnull=True)
