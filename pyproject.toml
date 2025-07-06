@@ -1,0 +1,49 @@
+[project]
+name = "employee-task-tracker"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Pavel Polezhaev",email = "pavelpoleczaev@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django (>=5.2.3,<6.0.0)",
+    "djangorestframework (>=3.16.0,<4.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)",
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "coverage (>=7.9.1,<8.0.0)",
+    "drf-yasg (>=1.21.10,<2.0.0)",
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "django-cors-headers (>=4.7.0,<5.0.0)",
+]
+
+[tool.poetry.group.lint.dependencies]
+flake8 = ">=7.3.0,<8.0.0"
+black = ">=25.1.0,<26.0.0"
+isort = ">=6.0.1,<7.0.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+exclude = '''
+(
+  /(
+      \.eggs         # Исключить несколько общих каталогов
+    | \.git          # в корне проекта
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | dist
+  )/
+  | foo.py           # Также отдельно исключить файл с именем foo.py
+                     # в корне проекта
+)
+'''
+
+[tool.isort]
+line_length = 120
