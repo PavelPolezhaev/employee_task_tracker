@@ -6,14 +6,11 @@ from tracker.models import Employee, Task
 def get_free_employee():
     """Находит наименее загруженного сотрудника"""
 
-    employees = Employee.objects.annotate(task_count=Count("task", filter=Q(task__status="in_progress")))
-    min_tasks = None
-    free_employee = None
-    for emp in employees:
-        if free_employee is None or emp.task_count < min_tasks:
-            min_tasks = emp.task_count
-            free_employee = emp
-    return free_employee
+    return (
+        Employee.objects.annotate(task_count=Count("task", filter=Q(task__status="in_progress")))
+        .order_by("task_count")
+        .first()
+    )
 
 
 def get_current_employee(task):
@@ -28,6 +25,6 @@ def get_current_employee(task):
 
     if subtask:
         employee = subtask.employee
-        employee.task_count = subtask.employee_task_count  # Добавляем поле "на лету"
+        employee.task_count = subtask.employee_task_count
         return employee
     return None
